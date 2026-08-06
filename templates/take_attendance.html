@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Attendance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+           
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: inherit;
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+        .container {
+            border: 3px solid black;
+            height: auto;
+            width: 320px;
+            padding: 15px;
+            margin: 50px auto;
+            background: white;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+        }
+        button {
+            display: block;
+            margin: 5px auto;
+            color: white;
+            padding: 8px;
+            width: 90%;
+            border: none;
+            cursor: pointer;
+        }
+        #startAttendance { background-color: rgba(63, 130, 212, 0.994); }
+        #stopAttendance { background-color: rgba(202, 29, 29, 0.994); }
+        select, input {
+            margin: 5px;
+            width: 90%;
+            padding: 5px;
+        }
+        #statusMessage {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Take Attendance</h2>
+
+        <label for="course">Course:</label>
+        <input type="text" id="course" readonly required><br>
+
+        <label for="year">Year:</label>
+        <select id="year"></select><br>
+
+        <label for="semester">Semester:</label>
+        <select id="semester"></select><br>
+
+        <label for="subject">Subject:</label>
+        <select id="subject"></select><br>
+
+        <label for="stream">Stream</label>
+        <select id="stream"></select><br>
+
+        <button id="startAttendance">Start Attendance</button>
+        <button id="stopAttendance">Stop Attendance</button>
+        <p id="statusMessage"></p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('http://localhost:5000/getFacultyAssignments', {
+                method: 'GET',
+                credentials: 'include' // ⬅️ Required to send session cookie
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Unauthorized access");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Assignments:", data);
+                populateDropdowns(data.assignments); // ✅ Call the dropdown population here
+            })
+            .catch(err => {
+                console.error("Error fetching faculty data:", err);
+            });
+        });
+        
+        function populateDropdowns(assignments) {
+            const yearDropdown = document.getElementById("year");
+            const semesterDropdown = document.getElementById("semester");
+            const subjectDropdown = document.getElementById("subject");
+            const streamDropdown = document.getElementById("stream");
+            const courseInput = document.getElementById("course");
+        
+            if (!yearDropdown || !semesterDropdown || !subjectDropdown || !courseInput || !streamDropdown) {
+        console.error("Dropdown elements not found.");
+        return;
+    }
+        
+            yearDropdown.innerHTML = `<option value="">Select Year</option>`;
+            semesterDropdown.innerHTML = `<option value="">Select Semester</option>`;
+            subjectDropdown.innerHTML = `<option value="">Select Subject</option>`;
+            streamDropdown.innerHTML = ``;
+        
+            const uniqueYears = new Set();
+            const uniqueSemesters = new Set();
+            const uniqueSubjects = new Set();
+            const uniqueStreams = new Set();
+            let courseName = "";
+        
+            assignments.forEach(assignment => {
+                uniqueYears.add(assignment.year);
+                uniqueSemesters.add(assignment.semester);
+                courseName = assignment.course;
+        
+
+                if (assignment.stream) {
+            uniqueStreams.add(assignment.stream);
+        }
+
+                assignment.subjects.forEach(subject => {
+                    uniqueSubjects.add(subject);
+                });
+            });
+        
+            courseInput.value = courseName;
+        
+            uniqueYears.forEach(year => {
+                let option = document.createElement("option");
+                option.value = year;
+                option.textContent = year;
+                yearDropdown.appendChild(option);
+            });
+        
+            uniqueSemesters.forEach(semester => {
+                let option = document.createElement("option");
+                option.value = semester;
+                option.textContent = semester;
+                semesterDropdown.appendChild(option);
+            });
+        
+            uniqueSubjects.forEach(subject => {
+                let option = document.createElement("option");
+                option.value = subject;
+                option.textContent = subject;
+                subjectDropdown.appendChild(option);
+            });
+            // Handle stream dropdown
+    if (uniqueStreams.size > 0) {
+        streamDropdown.disabled = false;
+        streamDropdown.innerHTML = `<option value="">Select Stream</option>`;
+        uniqueStreams.forEach(stream => {
+            let option = document.createElement("option");
+            option.value = stream;
+            option.textContent = stream;
+            streamDropdown.appendChild(option);
+        });
+    } else {
+        streamDropdown.disabled = true;
+        let option = document.createElement("option");
+        option.textContent = "Not Needed";
+        option.value = "Not Needed";
+        streamDropdown.appendChild(option);
+    }
+            
+        }
+        
+        function displayMessage(message, status) {
+            let statusMessage = document.getElementById("statusMessage");
+            statusMessage.textContent = message;
+            statusMessage.style.color = status === "success" ? "green" : "red";
+            setTimeout(() => statusMessage.textContent = "", 3000);
+        }
+        
+        document.getElementById("startAttendance").addEventListener("click", function () {
+            let course = document.getElementById("course").value;
+            let year = document.getElementById("year").value;
+            let semester = document.getElementById("semester").value;
+            let subject = document.getElementById("subject").value;
+            let stream = document.getElementById("stream").value;
+            if (!course || !year || !semester || !subject) {
+                alert("Please select Course, Year, Semester, and Subject!");
+                return;
+            }
+        
+            fetch('http://localhost:5000/start_attendance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ course, year, semester, subject , stream  })
+            })
+            .then(response => response.json())
+            .then(data => displayMessage(data.message, data.status))
+            .catch(error => {
+                console.error('Error:', error);
+                displayMessage("An error occurred!", "error");
+            });
+        });
+        
+        document.getElementById("stopAttendance").addEventListener("click", function () {
+            fetch('/stop_attendance', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => displayMessage(data.message, data.status))
+            .catch(error => {
+                console.error('Error:', error);
+                displayMessage("An error occurred!", "error");
+            });
+        });
+        </script>
+        
+</body>
+</html>

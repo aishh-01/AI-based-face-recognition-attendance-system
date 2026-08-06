@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .dashboard {
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .content {
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        .pie-chart {
+            max-width: 600px;
+            margin: auto;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>Student Dashboard</h1>
+            <button onclick="location.href='index.html'" class="btn" style="background-color: #ff4d4d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">Logout</button>
+        </div>
+        <div class="content">
+            <!-- Attendance Section -->
+            <div class="section">
+                <h2>View Attendance</h2>
+                <label for="attendanceDate">Select Date:</label>
+                <input type="date" id="attendanceDate">
+                <button class="btn" onclick="viewAttendance()">View Attendance</button>
+
+                <table id="attendanceTable" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Attendance Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Timetable Section -->
+            <div class="section">
+                <h2>Timetable</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>9:00 AM-10:00 AM </th>
+                            <th>10:00 AM-11:00 AM</th>
+                            <th>11:00 AM-12:00 PM</th>
+                            <th>12:00 PM-1:00 PM</th>
+                            <th>1:00 PM-2:00 PM</th>
+                            <th>2:00 PM-3:00 PM</th>
+                            <th>3:00 PM-4:00 PM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Wednesday</td>
+                            <td>Math</td>
+                            <td>Physics</td>
+                            <td>Chemistry</td>
+                            <td>English</td>
+                            <td>Break</td>
+                            <td>English</td>
+                            <td>English</td>
+                        </tr>
+                        <tr>
+                            <td>Thursday</td>
+                            <td>Biology</td>
+                            <td>History</td>
+                            <td>Geography</td>
+                            <td>Computer Science</td>
+                            <td>Break</td>
+                            <td>History</td>
+                            <td>History</td>
+                        </tr>
+                        <tr>
+                            <td>Friday</td>
+                            <td>Biology</td>
+                            <td>History</td>
+                            <td>Geography</td>
+                            <td>Computer Science</td>
+                            <td>Break</td>
+                            <td>History</td>
+                            <td>History</td>
+                        </tr>
+                        <tr>
+                            <td>Saturday</td>
+                            <td>Biology</td>
+                            <td>History</td>
+                            <td>Geography</td>
+                            <td>Computer Science</td>
+                            <td>Break</td>
+                            <td>History</td>
+                            <td>History</td>
+                        </tr>
+                        <tr>
+                            <td>Sunday</td>
+                            <td>Biology</td>
+                            <td>History</td>
+                            <td>Geography</td>
+                            <td>Computer Science</td>
+                            <td>Break</td>
+                            <td>History</td>
+                            <td>History</td>
+                        </tr>
+                        <tr>
+                            <td>Monday</td>
+                            <td>Biology</td>
+                            <td>History</td>
+                            <td>Geography</td>
+                            <td>Computer Science</td>
+                            <td>Break</td>
+                            <td>History</td>
+                            <td>History</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Attendance Percentage Section -->
+            <div class="section">
+                <h2>Attendance Graph</h2>
+                <div class="pie-chart">
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function viewAttendance() {
+            const date = document.getElementById('attendanceDate').value;
+            if (!date) {
+                alert('Please select a date.');
+                return;
+            }
+
+            // Mock data for attendance
+            const attendanceData = [
+                { subject: 'Math', status: 'Present' },
+                { subject: 'Physics', status: 'Absent' },
+                { subject: 'Chemistry', status: 'Present' },
+                { subject: 'English', status: 'Present' },
+                { subject: 'Biology', status: 'Absent' },
+            ];
+
+            const table = document.getElementById('attendanceTable');
+            const tbody = table.querySelector('tbody');
+
+            // Clear previous data
+            tbody.innerHTML = '';
+
+            attendanceData.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${record.subject}</td><td>${record.status}</td>`;
+                tbody.appendChild(row);
+            });
+
+            table.style.display = 'table';
+        }
+
+        // Mock data for attendance percentage
+        const attendancePercentage = {
+            Math: 85,
+            Physics: 75,
+            Chemistry: 90,
+            English: 80,
+            Biology: 70
+        };
+
+        // Render pie chart
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(attendancePercentage),
+                datasets: [{
+                    data: Object.values(attendancePercentage),
+                    backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6c757d']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    </script>
+    </body>
+</html>

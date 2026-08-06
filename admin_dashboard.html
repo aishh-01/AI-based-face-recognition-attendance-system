@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        text-align: center;
+        background-image: url('images/2023-10-18.jpg');
+        background-size: cover;
+            background-repeat: no-repeat;
+    }
+    body::before 
+        {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: inherit;
+        background-size: cover;
+        background-position: center;
+        filter: blur(4px);
+        z-index: -1;
+        }
+        .dashboard {
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+        }
+        .header h1 {
+            margin: 0;
+        }
+    .container {
+        width: 100%;
+        
+    }
+    
+    h1 {
+        color: #333;
+    }
+    
+    .form-container {
+        margin-top: 20px;
+    }
+    
+    input, select {
+        width: 80%;
+        padding: 10px;
+        margin: 10px 0;
+    }
+    
+    button {
+        padding: 10px;
+        background: blue;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    
+    button:hover {
+        background: darkblue;
+    }
+    .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+    .card {
+            flex: 1 1 calc(33% - 30px);
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        .card:hover {
+            box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.8);
+            transform: scale(1.01);
+            transition: 0.1s;
+        }
+        .card a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .card a:hover {
+            text-decoration: underline;
+        }
+    </style>    
+</head>
+<body>
+
+    <div class="container">
+        <div class="dashboard">
+            <div class="header">
+                <h1>Admin Dashboard</h1>
+                <button onclick="location.href='index.html'" style="background-color: #ff4d4d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">Logout</button>
+                
+            </div>
+        <div class="actions">
+            <div class="card">
+                <h3> Faculty Registration</h3>
+                <a href="adminPage/faculty_registration.html">add faculty</a> 
+            </div>
+            <div class="card">
+                <h3>Student Registration</h3>
+                <a href="adminPage/student_registration.html">add student</a>   
+        </div>
+    <script>
+        // Add Faculty
+        document.getElementById("facultyForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append("name", document.getElementById("facultyName").value);
+            formData.append("facultyID", document.getElementById("facultyID").value);
+            formData.append("email", document.getElementById("facultyEmail").value);
+            formData.append("password", document.getElementById("facultyPassword").value);
+            formData.append("photo", document.getElementById("facultyPhoto").files[0]);
+
+            try {
+                const response = await fetch("http://localhost:5000/api/addFaculty", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error("Error adding faculty:", error);
+                alert("Error adding faculty.");
+            }
+        });
+
+        // Add Student
+        document.getElementById("studentForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append("name", document.getElementById("studentName").value);
+            formData.append("studentID", document.getElementById("studentID").value);
+            formData.append("course", document.getElementById("studentCourse").value);
+            formData.append("stream", document.getElementById("studentStream").value);
+            formData.append("email", document.getElementById("studentEmail").value);
+            formData.append("password", document.getElementById("studentPassword").value);
+            formData.append("photo", document.getElementById("studentPhoto").files[0]);
+
+            try {
+                const response = await fetch("http://localhost:5000/api/addStudent", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error("Error adding student:", error);
+                alert("Error adding student.");
+            }
+        });
+
+        // Update Faculty Assignments
+        document.getElementById("updateFacultyForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+    
+            const facultyID = document.getElementById("updateFacultyID").value;
+            const course = document.getElementById("facultyCourse").value;
+            const stream = document.getElementById("facultyStream").value;
+            const year = document.getElementById("facultyYear").value;
+            const semester = document.getElementById("facultySemester").value;
+            const subjects = document.getElementById("facultySubjects").value.split(",").map(subject => subject.trim());
+    
+            try {
+                const response = await fetch(`http://localhost:5000/api/updateFacultyAssignments/${facultyID}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                assignments: [{ course, stream, year, semester, subjects }]
+            })
+        });
+
+    
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error("Error updating assignments:", error);
+                alert("Error updating faculty assignments.");
+            }
+        });
+       
+    function redirectTo(type) {
+        const course = type === "faculty"
+            ? document.getElementById("facultyCourseSelect").value
+            : document.getElementById("studentCourseSelect").value;
+        
+        if (!course) {
+            alert("Please select a course.");
+            return;
+        }
+        
+        // Redirect to a new page with query parameters
+        window.location.href = `view.html?type=${type}&course=${course}`;
+    }
+
+
+    </script>
+</body>
+</html>

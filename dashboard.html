@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('images/2023-10-18.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        body::before 
+        {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: inherit;
+        background-size: cover;
+        background-position: center;
+        filter: blur(4px);
+        z-index: -1;
+        }
+        .dashboard {
+            padding: 20px;
+        }
+        .faculty-info {
+            width: 350px;
+            font-family: Arial, sans-serif;
+        }
+        .faculty-info >img{
+            border-radius: 50%;
+            height:60px;
+            width:60px;
+        }
+        .greeting {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .content {
+            padding: 20px;
+        }
+        .current-datetime {
+            font-size: 18px;
+            margin-top: 240px;
+            margin-left: 1080px;
+            color:whitesmoke;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .card {
+            flex: 1 1 calc(33% - 30px);
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card:hover {
+            box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.8);
+            transform: scale(1.01);
+            transition: 0.1s;
+        }
+        .card a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>Faculty Dashboard</h1>
+            <button onclick="location.href='index.html'" style="background-color: #ff4d4d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">Logout</button>
+            
+        </div>
+        
+        <div class="content">
+            <div class="faculty-info">
+                <img id="facultyPic" src="" alt="Faculty Picture">
+                
+                <h3 id="facultyName"></h3>
+            </div>
+            <div class="actions">
+                <div class="card">
+                    <h3>Take Attendance</h3>
+                    <button id="goToAttendance">Go to Attendance</button>
+                </div>
+                <div class="card">
+                    <h3>View Attendance</h3>
+                    <button id="goToAttendance">View Records</button>   <!--here execel sheet must be generated accordingly to view-->
+                </div>
+                <div class="card">
+                    <h3>Update Attendance</h3>
+                    <button id="goToAttendance">Update Records</button> <!--here excel sheel updation for any student according to Student ID-->
+                </div>
+            </div>
+        </div>
+        <div class="current-datetime" id="currentDateTime">Current Date & Time:</div>
+    </div>
+
+
+    <script src="dashboard.js">
+             </script>
+    
+    
+    
+
+</body>
+</html>

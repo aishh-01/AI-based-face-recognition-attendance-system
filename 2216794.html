@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .dashboard {
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .content {
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        #attendanceResult {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>AISHWARYA Dashboard</h1>
+            <button onclick="location.href='index.html'" class="btn" style="background-color: #ff4d4d;">Logout</button>
+        </div>
+        <div class="content">
+            <div class="section">
+                <h2>View Attendance</h2>
+                <label for="attendanceDate">Select Date:</label>
+                <input type="date" id="attendanceDate">
+                <button class="btn" onclick="viewAttendance()">View Attendance</button>
+                <table border='1' length='100%' width='50%'>
+                    <tr><td> </td>
+                        <th>9:00-10:00</th>
+                        <th>10:00-11:00</th>
+                        <th>11:00-1:00</th>
+                        <th>1:00-2:00</th>
+                        <th>2:00-3:00</th>
+                        <th>3:00-4:00</th>                                            
+                    </tr>
+                    <tr><td align="center">Wednesday</td>
+                        <td>PHFR</td>
+                        <td>Prob & Stats</td>
+                        <td>AI/ML Lab</td>
+                        <td rowspan="6" align="CENTER">LUNCH</td>  
+                        <!-- rowspan >= 6 -->
+                        <td>TOC</td>
+                        <td>ENTP-II</td>                                            
+                    </tr>
+                    <tr><td align="center">Thrusday</td>
+                        <td>PHFR</td>
+                        <td>Prob & Stats</td>
+                        <td>AI/ML Lab</td>
+                        
+                        <td>TOC</td>
+                        <td>ENTP-II</td>                                            
+                    </tr>
+                    <tr><td align="center">Friday</td>
+                        <td> </td>
+                        <td>Prob & Stats</td>
+                        <td>IWT Lab</td>
+                        
+                        <td>AI/ML</td>
+                        <td>IWT</td>                                                    
+                    </tr>
+                    <tr><td align="center">Saturday</td>
+                        <td>Fundamental of Eco</td>
+                        <td>Prob & Stats</td>
+                        <td>IWT Lab</td>
+                        
+                        <td>AI/ML</td>
+                        <td>IWT</td>                                                        
+                    </tr>
+                    <tr><td align="center">Sunday</td>
+                        <td>Fundamental of Eco</td>
+                        <td>AI/ML</td>
+                        <td></td>
+                        
+                        <td>TOC</td>
+                        <td>IWT</td>                                                        
+                    </tr>
+                    <tr><td align="center">Monday</td>
+                        <td>Fundamental of Eco</td>
+                        <td>AI/ML</td>
+                        <td></td>
+                        
+                        <td>TOC</td>
+                        <td>IWT</td>
+                    </tr>
+                </table>
+
+                <!-- Attendance Result -->
+                <div id="attendanceResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const attendanceData = [
+            { subject: 'Fundamental of Eco', status: 'Absent' },
+            { subject: 'Prob & Stats', status: 'Absent' },
+            { subject: 'IWT Lab', status: 'Absent' },
+            { subject: 'AI/ML', status: 'Present' },
+            { subject: 'IWT', status: 'Absent' }
+        ];
+
+        function viewAttendance() {
+            const date = document.getElementById('attendanceDate').value;
+            if (!date) {
+                alert('Please select a date.');
+                return;
+            }
+
+            // Generate table
+            let tableHTML = `
+                <h3>Attendance for ${date}</h3>
+                <table>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Status</th>
+                    </tr>
+            `;
+
+            attendanceData.forEach(record => {
+                tableHTML += `<tr>
+                    <td>${record.subject}</td>
+                    <td>${record.status}</td>
+                </tr>`;
+            });
+
+            tableHTML += `</table>`;
+
+            // Insert into the div
+            document.getElementById('attendanceResult').innerHTML = tableHTML;
+        }
+    </script>
+</body>
+</html>

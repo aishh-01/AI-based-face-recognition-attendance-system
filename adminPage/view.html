@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Details</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 id="title"></h2>
+        <h3>Course: <span id="course-name"></span></h3>
+        <h3>Total Count: <span id="total-count">0</span></h3>
+
+        <table id="dataTable">
+            <thead>
+                <!-- The header will be dynamically updated based on type -->
+            </thead>
+            <tbody>
+                <!-- Data will be added dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get('type');
+    const course = urlParams.get('course');
+
+    if (!type || !course) {
+        alert("Invalid request!");
+        window.location.href = "index.html";
+        return;
+    }
+
+    $('#course-name').text(course);
+    const apiUrl = type === "faculty" ? "http://localhost:5000/api/faculty" : "http://localhost:5000/api/students";
+    $('#title').text(type === "faculty" ? "Registered Faculty" : "Registered Students");
+
+    // Dynamically set table headers based on type
+    if (type === "faculty") {
+        $('#dataTable thead').html(`
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Faculty ID</th>
+                <th>Subjects</th>
+            </tr>
+        `);
+    } else {
+        $('#dataTable thead').html(`
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Stream</th>
+                <th>Student ID</th>
+            </tr>
+        `);
+    }
+
+    $.ajax({
+        url: `${apiUrl}?course=${course}`,  // Append course as a query parameter
+        method: "GET",
+        success: function(data) {
+            $('#dataTable tbody').empty();
+            data.forEach(item => {
+                if (type === "faculty") {
+                    // Check if assignments exist and get the subjects
+                    const subjects = item.assignments && item.assignments[0] && Array.isArray(item.assignments[0].subjects) 
+                        ? item.assignments[0].subjects.join(", ") 
+                        : "No subjects assigned";
+                    $('#dataTable tbody').append(`
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.email}</td>
+                            <td>${item.facultyID}</td>
+                            <td>${subjects}</td>
+                        </tr>
+                    `);
+                } else {
+                    $('#dataTable tbody').append(`
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.email}</td>
+                            <td>${item.stream}</td>
+                            <td>${item.studentID}</td>
+                        </tr>
+                    `);
+                }
+            });
+            $('#total-count').text(data.length);
+        },
+        error: function(err) {
+            alert("Error fetching data!");
+        }
+    });
+});
+
+
+    </script>
+</body>
+</html>

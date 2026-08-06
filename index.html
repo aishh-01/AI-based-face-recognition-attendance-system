@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Portal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="images/Banasthali_Vidyapeeth_Logo.png" alt="College Logo" class="logo">
+      <div class="title">
+      <h1>Banasthali Vidyapith</h1>
+      <p class="hindi-title">वनस्थली विद्यापीठ</p>
+      </div>
+    </div>
+    <div>
+      <div class="style">
+      </div>
+    
+    <div class="content">
+      <h2>Welcome to College Portal</h2>
+      <div class="buttons">
+        <a href="#" id ="adminLoginBtn" class="btn">Admin Login</a>
+        <a href="#" id ="facultyLoginBtn" class="btn">Faculty Login</a>
+        <a href="#" id ="studentLoginBtn" class="btn">Student Login</a>
+      </div>
+    </div>
+    <div class="social-icons">
+      <a href="https://www.instagram.com/banasthali_vidyapith_official/?hl=en" target="_blank">
+        <img src="images/instagram.png" alt="Instagram"></a>  
+        <a href="https://www.facebook.com/banasthali.org" target="_blank">
+          <img src="images/download.png" alt="Banasthali Facebook" /></a>
+        <a href="http://banasthali.org/banasthali/wcms/en/home/lower-menu/naac-accredation/index.html" target="_blank">
+          <img src="images/main-logo.png" alt="Banasthali Logo"></a>
+    </div>
+  </div>
+  
+
+
+  <!-- Login_Modal Faculty -->
+  <div class="modal" id="facultyLoginModal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Faculty Login</h2>
+        <form id="facultyLoginForm">
+            <label for="facultyUsername">Faculty ID</label>
+            <input type="text" id="facultyUsername" name="facultyUsername" placeholder="Enter your ID" required>
+
+            <label for="facultyPassword">Password</label>
+            <input type="password" id="facultyPassword" name="facultyPassword" placeholder="Enter your password" required>
+
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </div> 
+  </div>
+  
+  <!--Login Student-->
+  <div class="modal" id="studentLoginModal">
+    <div class="modal-content">
+        <span class="close" id="studentcloseModal">&times;</span>
+        <h2>Student Login</h2>
+        <form id="StudentLoginForm">
+            <label for="studentUsername">Student ID</label>
+            <input type="text" id="studentUsername" name="studentUsername" placeholder="Enter your ID" required>
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </div>
+</div>
+<!--Admin login_Modal-->
+<div class="modal" id="adminLoginModal">
+    <div class="modal-content">
+        <span class="close" id="admincloseModal">&times;</span>
+        <h2>Admin Login</h2>
+        <form id="adminLoginForm">
+            <label for="adminUsername">Admin ID</label>
+            <input type="text" id="adminUsername" name="adminUsername" placeholder="Enter your ID" required>
+
+            <label for="adminPassword">Password</label>
+            <input type="password" id="adminPassword" name="adminPassword" placeholder="Enter your password" required>
+
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </div>
+</div>
+<script src="script.js"></script>
+
+
+</body>
+</html>
