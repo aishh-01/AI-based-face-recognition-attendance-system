@@ -151,6 +151,8 @@ The system consists of a web frontend, backend components, a Python-based face r
                            │ • Excel Reports     │
                            │ • Uploaded Images   │
                            └─────────────────────┘
+```
+
 ## 🔄 System Workflow
 
 The overall attendance workflow can be represented as:
