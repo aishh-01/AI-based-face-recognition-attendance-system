@@ -286,7 +286,7 @@ The exact startup sequence and port may depend on the local environment and proj
 
 ### 👨‍💼 Faculty Dashboard
 
-![Faculty Dashboard](screenshots/faculty dashboard.png)
+![Faculty Dashboard](screenshots/faculty-dashboard.png)
 
 ### 👨‍🎓 Student Registration
 
